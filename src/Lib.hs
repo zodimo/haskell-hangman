@@ -9,12 +9,17 @@ module Lib
     , play
     ) where
 
+{-
+https://www.reddit.com/r/haskellquestions/comments/egz4ic/getchar_doesnt_work_until_i_press_the_enter_key/
+-}
+
 import Data.Char (toUpper)
 import Data.List (intercalate)
 import Stash (secretStash)
 import System.Random
 import Control.Monad.State
 import System.Console.ANSI
+import System.IO
 
 {-
 read words from file
@@ -93,14 +98,16 @@ play = do
     renderGame
     -- get the game to update the guess
     liftIO $ putStrLn "What is your next guess ?:"
+    liftIO $ hSetBuffering stdin NoBuffering
     guess <- liftIO $ getChar
     liftIO $ putStrLn $ "guess: " ++ [guess]
     recordGuess guess
     game   <- get        
     if isGameSolved game  then
         liftIO $ do
-            putStrLn $ "Welldone you did it in " ++ (show $ getTries game) ++ "tries!"
-            putStrLn $ "The secret word(s) was: " ++ (_secretSentence game)
+            clearScreen
+            putStrLn $ "Welldone you did it in " ++ (show $ getTries game) ++ " tries!"
+            putStrLn $ "The secret word(s) was: '" ++ (_secretSentence game) ++ "'"
     else
         play
         
