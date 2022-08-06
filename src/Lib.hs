@@ -10,6 +10,7 @@ module Lib
     , isAlreadyGuessed
     ) where
 
+import Control.Concurrent
 import Data.Char (toUpper)
 import Data.List (intercalate)
 import Stash (secretStash)
@@ -71,7 +72,13 @@ recordGuess :: (MonadIO m, MonadState Game m) => Char -> m ()
 recordGuess guess = do
     game <- get
     let guesses = _quessedLetters game
-    put game { _quessedLetters = guesses ++ [guess] }
+    if elem guess guesses then
+        liftIO $ do  
+            putStrLn $ "You have already tried this : " ++ [guess] 
+            threadDelay (10 ^ 6)
+        -- return ()
+    else
+        put game { _quessedLetters = guesses ++ [guess] }
 
 
 mkGame :: IO Game
@@ -88,7 +95,7 @@ renderGame = do
     game   <- get
     liftIO $ do
         clearScreen
-        putStrLn $ "Tries: " ++ (show $ getTries game)
+        putStrLn $ "Tries: " ++ (show $ getTries game) ++ " of 10"
         putStrLn $ "Previous guesses: " ++ "'" ++ ( _quessedLetters game) ++ "'"
         putStrLn $ "Your clue: " ++ getMaskedSentence game
         return ()
