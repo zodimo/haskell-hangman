@@ -35,6 +35,9 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - hangman
+    - random
+    - mtl
+    - ansi-terminal
 
 tests:
   hangman-test:
