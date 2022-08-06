@@ -7,10 +7,8 @@ module Lib
     , isUnMasked
     , mkGame
     , play
-    , isAlreadyGuessed
     ) where
 
-import Control.Concurrent
 import Data.Char (toUpper)
 import Data.List (intercalate)
 import Stash (secretStash)
@@ -60,10 +58,6 @@ getMaskedSentence game = maskSecretSentence (_secretSentence game) (_quessedLett
 getTries :: Game -> Int
 getTries game = length $ _quessedLetters game
 
-isAlreadyGuessed :: Game -> Char -> Bool
-isAlreadyGuessed game guess = elem guess $ _quessedLetters game
-
-
 isGameSolved :: Game -> Bool
 isGameSolved game = isUnMasked ( getMaskedSentence game )
 
@@ -72,13 +66,7 @@ recordGuess :: (MonadIO m, MonadState Game m) => Char -> m ()
 recordGuess guess = do
     game <- get
     let guesses = _quessedLetters game
-    if elem guess guesses then
-        liftIO $ do  
-            putStrLn $ "You have already tried this : " ++ [guess] 
-            threadDelay (10 ^ 6)
-        -- return ()
-    else
-        put game { _quessedLetters = guesses ++ [guess] }
+    put game { _quessedLetters = guesses ++ [guess] }
 
 
 mkGame :: IO Game
@@ -95,7 +83,7 @@ renderGame = do
     game   <- get
     liftIO $ do
         clearScreen
-        putStrLn $ "Tries: " ++ (show $ getTries game) ++ " of 10"
+        putStrLn $ "Tries: " ++ (show $ getTries game)
         putStrLn $ "Previous guesses: " ++ "'" ++ ( _quessedLetters game) ++ "'"
         putStrLn $ "Your clue: " ++ getMaskedSentence game
         return ()
@@ -109,11 +97,13 @@ play = do
     liftIO $ putStrLn $ "guess: " ++ [guess]
     recordGuess guess
     game   <- get        
-    if getTries game < 10 then
-        play
+    if isGameSolved game  then
+        liftIO $ do
+            putStrLn $ "Welldone you did it in " ++ (show $ getTries game) ++ "tries!"
+            putStrLn $ "The secret word(s) was: " ++ (_secretSentence game)
     else
-        liftIO $ putStrLn "Sorry tries exceeded..."
-        -- return ()
+        play
+        
         
         
         
