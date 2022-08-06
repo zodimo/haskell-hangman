@@ -1,6 +1,6 @@
 name:                hangman
 version:             0.1.0.0
-github:              "githubuser/hangman"
+github:              "zodimo/hangman"
 license:             BSD3
 author:              "Jaco Labuschagne"
 maintainer:          "zodimo@gmail.com"
@@ -21,6 +21,9 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
+- random
+- mtl
+- ansi-terminal
 
 library:
   source-dirs: src
@@ -35,9 +38,7 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - hangman
-    - random
-    - mtl
-    - ansi-terminal
+    
 
 tests:
   hangman-test:
@@ -50,3 +51,5 @@ tests:
     dependencies:
     - hangman
     - hspec
+    
+
