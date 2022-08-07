@@ -87,7 +87,6 @@ renderGame = do
 play ::  (MonadIO m, MonadState Game m) => m ()
 play = do
     renderGame
-    -- get the game to update the guess
     liftIO $ putStrLn "What is your next guess ?:"
     {-
         BUG with getChar..
