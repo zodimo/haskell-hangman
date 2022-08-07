@@ -57,7 +57,7 @@ isGameSolved :: Game -> Bool
 isGameSolved game = isUnMasked ( getMaskedSentence game )
 
 
-recordGuess :: (MonadIO m, MonadState Game m) => Char -> m ()
+recordGuess :: (MonadState Game m) => Char -> m ()
 recordGuess guess = do
     game <- get
     let guesses = _quessedLetters game
