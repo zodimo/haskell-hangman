@@ -9,9 +9,6 @@ module Lib
     , play
     ) where
 
-{-
-https://www.reddit.com/r/haskellquestions/comments/egz4ic/getchar_doesnt_work_until_i_press_the_enter_key/
--}
 
 import Data.Char (toUpper)
 import Data.List (intercalate)
@@ -98,6 +95,10 @@ play = do
     renderGame
     -- get the game to update the guess
     liftIO $ putStrLn "What is your next guess ?:"
+    {-
+        BUG with getChar..
+        https://www.reddit.com/r/haskellquestions/comments/egz4ic/getchar_doesnt_work_until_i_press_the_enter_key/
+    -}
     liftIO $ hSetBuffering stdin NoBuffering
     guess <- liftIO $ getChar
     liftIO $ putStrLn $ "guess: " ++ [guess]
