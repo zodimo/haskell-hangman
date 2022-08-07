@@ -18,13 +18,6 @@ import Control.Monad.State
 import System.Console.ANSI
 import System.IO
 
-{-
-read words from file
-track quessed letters
-limit amount of quesses
-
-
--}
 
 type GuessedChars = String
 type SecretWord = String
