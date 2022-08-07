@@ -50,7 +50,7 @@ isUnMasked maskedWord = if (elem '_' maskedWord) then False else True
 getMaskedSentence :: Game -> String
 getMaskedSentence game = maskSecretSentence (_secretSentence game) (_quessedLetters game)
 
-getTries :: Game -> Int
+getTries :: Game -> Tries
 getTries game = length $ _quessedLetters game
 
 isGameSolved :: Game -> Bool
