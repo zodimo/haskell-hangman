@@ -85,6 +85,7 @@ renderGame = do
     game   <- get
     liftIO $ do
         clearScreen
+        putStrLn $ "== Blockchain theme guess the word hangman game =="
         putStrLn $ "Tries: " ++ (show $ getTries game)
         putStrLn $ "Previous guesses: " ++ "'" ++ ( _quessedLetters game) ++ "'"
         putStrLn $ "Your clue: " ++ getMaskedSentence game
