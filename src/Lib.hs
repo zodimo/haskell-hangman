@@ -3,7 +3,7 @@
 module Lib
   ( maskSecretChar,
     maskSecretWord,
-    maskSecretSentence,
+    maskSecretPhrase,
     isUnMasked,
     mkGame,
     play,
@@ -22,14 +22,14 @@ type GuessedChars = String
 
 type SecretWord = String
 
-type SecretSentence = String
+type SecretPhrase = String
 
 type MaskedSecretWord = String
 
 type Tries = Int
 
 data Game = Game
-  { _secretSentence :: SecretSentence,
+  { _secretPhrase :: SecretPhrase,
     _quessedLetters :: GuessedChars
   }
   deriving (Show)
@@ -43,16 +43,16 @@ maskSecretWord :: SecretWord -> GuessedChars -> MaskedSecretWord
 maskSecretWord secretWord quesses = map (`maskSecretChar` map toUpper quesses) secretWord
 
 -- make one or more words
-maskSecretSentence :: SecretSentence -> GuessedChars -> MaskedSecretWord
-maskSecretSentence secretSentence quesses = unwords $ (`maskSecretWord` quesses) <$> words secretSentence
+maskSecretPhrase :: SecretPhrase -> GuessedChars -> MaskedSecretWord
+maskSecretPhrase secretPhrase quesses = unwords $ (`maskSecretWord` quesses) <$> words secretPhrase
 
 -- test if word contains masked characters
 isUnMasked :: MaskedSecretWord -> Bool
 isUnMasked maskedWord = '_' `notElem` maskedWord
 
 -- mask secret from game state
-getMaskedSentence :: Game -> String
-getMaskedSentence game = maskSecretSentence (_secretSentence game) (_quessedLetters game)
+getMaskedPhrase :: Game -> String
+getMaskedPhrase game = maskSecretPhrase (_secretPhrase game) (_quessedLetters game)
 
 -- amount of guesses is the amount of tries
 getTries :: Game -> Tries
@@ -60,7 +60,7 @@ getTries game = length $ _quessedLetters game
 
 -- if secret is unmasked then the game is solved.
 isGameSolved :: Game -> Bool
-isGameSolved game = isUnMasked (getMaskedSentence game)
+isGameSolved game = isUnMasked (getMaskedPhrase game)
 
 -- append the current guess to the list of guessed characters and save to the game state
 recordGuess :: (MonadState Game m) => Char -> m ()
@@ -76,7 +76,7 @@ mkGame = do
   let secret = secretStash !! secretIndex
    in return $
         Game
-          { _secretSentence = secret,
+          { _secretPhrase = secret,
             _quessedLetters = ""
           }
 
@@ -89,7 +89,7 @@ renderGame = do
     putStrLn "== Blockchain theme guess the word hangman game =="
     putStrLn $ "Tries: " ++ show (getTries game)
     putStrLn $ "Previous guesses: " ++ "'" ++ _quessedLetters game ++ "'"
-    putStrLn $ "Your clue: " ++ getMaskedSentence game
+    putStrLn $ "Your clue: " ++ getMaskedPhrase game
     return ()
 
 -- game loop
@@ -110,5 +110,5 @@ play = do
     then liftIO $ do
       clearScreen
       putStrLn $ "Welldone you did it in " ++ show (getTries game) ++ " tries!"
-      putStrLn $ "The secret word(s) was: '" ++ _secretSentence game ++ "'"
+      putStrLn $ "The secret word(s) was: '" ++ _secretPhrase game ++ "'"
     else play

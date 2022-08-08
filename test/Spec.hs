@@ -16,6 +16,6 @@ main = hspec $ do
         it "mask words in a list" $ do
             fmap (`maskSecretWord` "o") (words "word") `shouldBe` ["_o__"] 
     
-    describe "maskSecretSentence" $ do
-        it "mask chars not yet guessed in secret word " $ do
-            maskSecretSentence "Eiffel Tower" "e" ` shouldBe` "E___e_ ___e_"
+    describe "maskSecretPhrase" $ do
+        it "mask chars not yet guessed in secret phrase " $ do
+            maskSecretPhrase "Eiffel Tower" "e" ` shouldBe` "E___e_ ___e_"
