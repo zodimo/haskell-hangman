@@ -28,6 +28,7 @@ type MaskedSecretWord = String
 
 type Tries = Int
 
+-- game state
 data Game = Game
   { _secretPhrase :: SecretPhrase,
     _quessedLetters :: GuessedChars
@@ -89,7 +90,7 @@ renderGame = do
     putStrLn "== Blockchain theme guess the word hangman game =="
     putStrLn $ "Tries: " ++ show (getTries game)
     putStrLn $ "Previous guesses: " ++ "'" ++ _quessedLetters game ++ "'"
-    putStrLn $ "Your clue: " ++ getMaskedPhrase game
+    putStrLn $ "Your progress: " ++ getMaskedPhrase game
     return ()
 
 -- game loop
